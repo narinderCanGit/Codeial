@@ -1,0 +1,26 @@
+{
+  "name": "codeial",
+  "version": "1.0.0",
+  "description": "this is my social networking site",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/narinderCanGit/Codeial.git"
+  },
+  "keywords": [
+    "social"
+  ],
+  "author": "Narinder",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/narinderCanGit/Codeial/issues"
+  },
+  "homepage": "https://github.com/narinderCanGit/Codeial#readme"
+}
