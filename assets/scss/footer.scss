@@ -1,0 +1,28 @@
+#layout-footer{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    background: grey;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: flex-start;
+    a{
+        color: white;
+        text-decoration: none;
+    }
+    a:hover{
+        color:burlywood;
+    }
+
+    
+
+    .footer-nav{
+        ul{
+            //list-style: none;
+        }
+        ul:hover{
+            color:burlywood;
+        }
+    }
+}
