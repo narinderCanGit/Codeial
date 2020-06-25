@@ -36,7 +36,8 @@ module.exports.destroy = function(req, res){
             //$pull: {comments: req.params.id}} delete 1 comment by this id and update the post model(db)
                 return res.redirect('back');
             })
-        }else{
+        }
+        else{
             return res.redirect('back');
         }
     });
