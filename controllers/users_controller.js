@@ -49,25 +49,30 @@ module.exports.signIn = function(req, res){
 }
 
 // get the sign up data
-module.exports.create = function(req, res){
-    if (req.body.password != req.body.confirm_password){
-        return res.redirect('back');
-    }
+module.exports.create = async function(req, res){
 
-    User.findOne({email: req.body.email}, function(err, user){
-        if(err){console.log('error in finding user in signing up'); return}
+    try{
 
-        if (!user){
-            User.create(req.body, function(err, user){
-                if(err){console.log('error in creating user while signing up'); return}
-
-                return res.redirect('/users/sign-in');
-            })
-        }else{
+        if (req.body.password != req.body.confirm_password){
             return res.redirect('back');
         }
+    
+        let user = await User.findOne({email: req.body.email});
+           
+        if (!user){
+            User.create(req.body);
+            return res.redirect('/users/sign-in');
 
-    });
+            } else{
+            return res.redirect('back');
+        }
+            
+    
+    }catch(err){
+        console.log('error',err);
+        return;
+    }
+    
 }
 
 
