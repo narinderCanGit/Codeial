@@ -15,9 +15,11 @@ module.exports.profile = function(req, res){
 module.exports.update = function(req, res){
     if(req.user.id == req.params.id){
         User.findByIdAndUpdate(req.params.id, req.body, function(err, user){
+            req.flash('success', 'Updated!');
             return res.redirect('back');
         });
     }else{
+        req.flash('error', 'Unauthorized!');
         return res.status(401).send('Unauthorized');
     }
 }
@@ -54,6 +56,7 @@ module.exports.create = async function(req, res){
     try{
 
         if (req.body.password != req.body.confirm_password){
+            req.flash('error', 'Passwords do not match');
             return res.redirect('back');
         }
     
@@ -61,16 +64,19 @@ module.exports.create = async function(req, res){
            
         if (!user){
             User.create(req.body);
+
+            req.flash('success', 'Sign-up succesful!');
             return res.redirect('/users/sign-in');
 
             } else{
-            return res.redirect('back');
+                req.flash('error', 'This email is already registered, use another email!');
+                return res.redirect('back');
         }
             
     
     }catch(err){
-        console.log('error',err);
-        return;
+        req.flash('error', err);
+        return res.redirect('back');
     }
     
 }
