@@ -14,7 +14,22 @@
                     let newPost = newPostDom(data.data.post);
                     $('#posts-list-container>ul').prepend(newPost); 
                     //prepend is used to show our comment on the top
+                    
                     deletePost($(' .delete-post-button', newPost));
+
+                     // call the create comment class
+                     new PostComments(data.data.post._id);
+
+                    new Noty({
+                        theme: 'relax',
+                        text: "Post published!",
+                        type: 'success',
+                        layout: 'topRight',
+                        timeout: 1500
+                        
+                    }).show();
+
+
                 }, error: function(error){
                     console.log(error.responseText);
                 }
@@ -69,6 +84,16 @@
                 url: $(deleteLink).prop('href'),
                 success: function(data){
                     $(`#post-${data.data.post_id}`).remove();
+
+                    new Noty({
+                        theme: 'relax',
+                        text: "Post deleted!",
+                        type: 'success',
+                        layout: 'topRight',
+                        timeout: 1500
+                        
+                    }).show();
+
                 },error: function(error){
                     console.log(error.responseText);
                 }
@@ -79,5 +104,25 @@
 
     
 
+    
+    /* loop over all the existing posts on the page (when the window loads for the first time)
+     and call the delete post method on delete link of each, also add AJAX (using the class we've created)
+      to the delete button of each*/
+
+      let convertPostsToAjax = function(){
+        $('#posts-list-container>ul>li').each(function(){
+            let self = $(this);
+            let deleteButton = $(' .delete-post-button', self);
+            deletePost(deleteButton);
+
+            // get the post's id by splitting the id attribute
+            let postId = self.prop('id').split("-")[1]     //post-3443443
+            new PostComments(postId);
+        });
+    }
+
     createPost();
+
+    convertPostsToAjax();
+
 }

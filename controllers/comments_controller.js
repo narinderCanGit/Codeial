@@ -17,6 +17,18 @@ module.exports.create = async function(req, res){
             post.comments.push(comment);
             post.save();
 
+            if (req.xhr){
+                // Similar for comments to fetch the user's id!
+                comment = await comment.populate('user', 'name').execPopulate();
+    
+                return res.status(200).json({
+                    data: {
+                        comment: comment
+                    },
+                    message: "Comment created!"
+                });
+            }
+
             req.flash('success', 'Comment published!');
             res.redirect('/');
         }
@@ -44,6 +56,16 @@ module.exports.destroy = async function(req, res){
 
             let post = await Post.findByIdAndUpdate(postId, { $pull: {comments: req.params.id}});
             //$pull: {comments: req.params.id}} delete 1 comment by this id and update the post model(db)
+
+             // send the comment id which was deleted back to the views
+             if (req.xhr){
+                return res.status(200).json({
+                    data: {
+                        comment_id: req.params.id
+                    },
+                    message: "Comment deleted"
+                });
+            }
 
             req.flash('success', 'Comment deleted!');
                 return res.redirect('back');
