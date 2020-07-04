@@ -11,6 +11,9 @@ module.exports.create = async function(req, res){
         });
     
         if (req.xhr){
+
+            post = await post.populate('user', 'name').execPopulate();
+
             return res.status(200).json({
                 data: {
                     post: post
@@ -38,6 +41,8 @@ module.exports.destroy = async function(req, res){
         // req.params.id received from home.ejs ---> routes/posts ----> posts_controller
         // .id means converting the object id into string
             if (post.user == req.user.id){
+
+
                 post.remove();
     
                 await Comment.deleteMany({post: req.params.id});
