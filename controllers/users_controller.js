@@ -38,7 +38,7 @@ module.exports.update = async function(req, res){
 
                 if (req.file){
 
-                    if (user.avatar){
+                    if (user.avatar && fs.existsSync(user.avatar)){
                         fs.unlinkSync(path.join(__dirname, '..', user.avatar));
                     }
 
