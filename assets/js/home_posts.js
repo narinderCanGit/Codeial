@@ -87,7 +87,7 @@
 
                     new Noty({
                         theme: 'relax',
-                        text: "Post deleted!",
+                        text: "Post and associated comments deleted!",
                         type: 'success',
                         layout: 'topRight',
                         timeout: 1500
