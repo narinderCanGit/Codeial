@@ -6,8 +6,8 @@ const User = require('../models/user');
 
 // tell passport to use a new strategy for google login
 passport.use(new googleStrategy({
-        clientID: '<YOUR_GOOGLE_CLIENT_ID>', // e.g. asdfghjkkadhajsghjk.apps.googleusercontent.com
-        clientSecret: '<YOUR_GOOGLE_CLIENT_SECRET>', // e.g. _ASDFA%KFJWIASDFASD#FAD-
+        clientID: "17911454345-61budho0b8gv15n95ngpbhet2imd4i2m.apps.googleusercontent.com", // e.g. asdfghjkkadhajsghjk.apps.googleusercontent.com
+        clientSecret: "L2o1_bzTnKgRrwEB_Qj51TC1", // e.g. _ASDFA%KFJWIASDFASD#FAD-
         callbackURL: "http://localhost:8000/users/auth/google/callback",
     },
 
@@ -15,8 +15,9 @@ passport.use(new googleStrategy({
         // find a user
         User.findOne({email: profile.emails[0].value}).exec(function(err, user){
             if (err){console.log('error in google strategy-passport', err); return;}
-            console.log(accessToken, refreshToken);
-            console.log(profile);
+           
+            // console.log(accessToken, refreshToken);
+            // console.log(profile);
 
             if (user){
                 // if found, set this user as req.user
@@ -26,7 +27,7 @@ passport.use(new googleStrategy({
                 User.create({
                     name: profile.displayName,
                     email: profile.emails[0].value,
-                    password: crypto.randomBytes(20).toString('hex')
+                    password: crypto.randomBytes(20).toString('hex')  //provide random password
                 }, function(err, user){
                     if (err){console.log('error in creating user google strategy-passport', err); return;}
 
