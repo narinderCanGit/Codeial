@@ -11,13 +11,14 @@ passport.use(new googleStrategy({
         callbackURL: "http://localhost:8000/users/auth/google/callback",
     },
 
+    //profile is provided by the google
     function(accessToken, refreshToken, profile, done){
         // find a user
         User.findOne({email: profile.emails[0].value}).exec(function(err, user){
             if (err){console.log('error in google strategy-passport', err); return;}
            
             // console.log(accessToken, refreshToken);
-            // console.log(profile);
+             console.log(profile);
 
             if (user){
                 // if found, set this user as req.user
