@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 require('./config/view-helpers')(app);
 
-const port = 8000;
+const port = 8001;
 const expressLayouts = require('express-ejs-layouts');
 const db = require('./config/mongoose');
 // used for session cookie
@@ -16,7 +16,7 @@ const passportJWT = require('./config/passport-jwt-strategy');
 const passportGoogle = require('./config/passport-google-oauth2-strategy');
 
 const MongoStore = require('connect-mongo')(session);
-const sassMiddleware =require('node-sass-middleware');
+// const sassMiddleware =require('sass-middleware');
 const flash = require('connect-flash');
 const customMware = require('./config/middleware');
 
@@ -25,20 +25,20 @@ const customMware = require('./config/middleware');
 // setup the chat server to be used with socket.io
 const chatServer = require('http').Server(app);
 const chatSockets = require('./config/chat_sockets').chatSockets(chatServer);
-chatServer.listen(5000);
-console.log('chat server is listening on port 5000');
+chatServer.listen(5001);
+console.log('chat server is listening on port 5001');
 
 const path = require('path');
 
-if (env.name == 'development'){
-    app.use(sassMiddleware({
-        src: path.join(__dirname, env.asset_path, 'scss'),
-        dest: path.join(__dirname, env.asset_path, 'css'),
-        debug: true,
-        outputStyle: 'extended',
-        prefix: '/css'
-    }));
-}
+// if (env.name == 'development'){
+//     app.use(sassMiddleware({
+//         src: path.join(__dirname, env.asset_path, 'scss'),
+//         dest: path.join(__dirname, env.asset_path, 'css'),
+//         debug: true,
+//         outputStyle: 'extended',
+//         prefix: '/css'
+//     }));
+// }
 
 app.use(express.urlencoded({extended: false}));
 
