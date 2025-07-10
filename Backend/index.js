@@ -1,11 +1,13 @@
 const express = require('express');
+const dotenv = require('dotenv');
+dotenv.config();
 const env = require('./config/environment');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
+const cors = require("cors");
 const app = express();
 require('./config/view-helpers')(app);
 
-const port = 8001;
 const expressLayouts = require('express-ejs-layouts');
 const db = require('./config/mongoose');
 // used for session cookie
@@ -14,13 +16,11 @@ const passport = require('passport');
 const passportLocal = require('./config/passport-local-strategy');
 const passportJWT = require('./config/passport-jwt-strategy');
 const passportGoogle = require('./config/passport-google-oauth2-strategy');
-
-const MongoStore = require('connect-mongo')(session);
+//The connect-mongo package is used to store session data in a MongoDB database instead of in memory. It's a session store for Express sessions that integrates with express-session.
+const MongoStore = require('connect-mongo');
 // const sassMiddleware =require('sass-middleware');
 const flash = require('connect-flash');
 const customMware = require('./config/middleware');
-
-
 
 // setup the chat server to be used with socket.io
 const chatServer = require('http').Server(app);
@@ -39,8 +39,18 @@ const path = require('path');
 //         prefix: '/css'
 //     }));
 // }
+app.use(
+  cors({
+    origin: process.env.FE_URL,
+    credentials: true, // Allow sending cookies
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow these methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allow these headers
+  })
+);
 
-app.use(express.urlencoded({extended: false}));
+app.use(express.json());
+
+app.use(express.urlencoded({extended: true}));
 
 app.use(cookieParser());
 
@@ -56,9 +66,6 @@ app.use(expressLayouts);
 app.set('layout extractStyles', true);
 app.set('layout extractScripts', true);
 
-
-
-
 // set up the view engine
 app.set('view engine', 'ejs');
 app.set('views', './views');
@@ -66,23 +73,18 @@ app.set('views', './views');
 // mongo store is used to store the session cookie in the db
 app.use(session({
     name: 'codeial',
-    // TODO change the secret before deployment in production mode
-    secret: 'blahsomething',
+    secret: 'blahsomething', //? change this for production mode 
     saveUninitialized: false,
     resave: false,
     cookie: {
         maxAge: (1000 * 60 * 100)
     },
-    store: new MongoStore(
-        {
-            mongooseConnection: db,
-            autoRemove: 'disabled'
-        
-        },
-        function(err){
-            console.log(err ||  'connect-mongodb setup ok');
-        }
-    )
+    store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    dbName: 'codeial',
+    collectionName: 'sessions',
+    autoRemove: 'disabled'
+  })
 }));
 
 app.use(passport.initialize());
@@ -96,11 +98,9 @@ app.use(customMware.setFlash);
 // use express router
 app.use('/', require('./routes'));
 
-
-app.listen(port, function(err){
+app.listen(process.env.PORT, function(err){
     if (err){
         console.log(`Error in running the server: ${err}`);
     }
-
-    console.log(`Server is running on port: ${port}`);
+    console.log(`Server is running on port: ${process.env.PORT}`);
 });
