@@ -1,9 +1,8 @@
 const express = require('express');
-
 const router = express.Router();
-const usersApi = require('../../../controllers/api/v1/users_api');
+const usersController = require('../../../controllers/api/v1/users_controllers');
 
-
-router.post('/create-session', usersApi.createSession);
+router.post('/sign-up', usersController.signUp);
+router.post('/sign-in', usersController.signIn);
 
 module.exports = router;

@@ -72,12 +72,15 @@ app.set('views', './views');
 
 // mongo store is used to store the session cookie in the db
 app.use(session({
-    name: 'codeial',
+    name: 'codeial-session',
     secret: 'blahsomething', //? change this for production mode 
     saveUninitialized: false,
     resave: false,
     cookie: {
-        maxAge: (1000 * 60 * 100)
+        maxAge: (1000 * 60 * 100),
+        httpOnly: true, // prevents client-side JavaScript from accessing the cookie
+        secure: false, // set to true if using HTTPS
+        sameSite: 'lax' // helps prevent CSRF attacks
     },
     store: MongoStore.create({
     mongoUrl: process.env.MONGODB_URI,
@@ -97,6 +100,9 @@ app.use(customMware.setFlash);
 
 // use express router
 app.use('/', require('./routes'));
+
+//for v1 router
+app.use('/v1', require('./routes/api'));
 
 app.listen(process.env.PORT, function(err){
     if (err){
